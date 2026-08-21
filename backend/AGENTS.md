@@ -12,6 +12,12 @@ Run Maven from `backend/`. There is **no Maven wrapper** (`mvnw`) — use system
 
 No separate lint/format step is configured (no checkstyle/spotless). Compilation is the verification gate.
 
+## Docker
+
+- `backend/Dockerfile` is a multi-stage build: Maven builder (`maven:3.9.16-eclipse-temurin-21-alpine`) → runtime `eclipse-temurin:21-jre-alpine` running as non-root user `holdly`. It copies the jar from `mvn package` output.
+- Built/run via the root `docker-compose.yml` `full` profile: `docker compose --profile full up -d --build`. Local infra (PostgreSQL/Redis only) is `docker compose up -d`.
+- `backend/.dockerignore` excludes `target/`, `.agents/`, `skills-lock.json` from the build context.
+
 ## Stack facts
 
 - Spring Boot 3.5.16, Java 21, Maven, packaged under `com.holdly` (e.g. `com.holdly.health`). Follow the `com.holdly.<feature>` package convention.
