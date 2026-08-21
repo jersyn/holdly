@@ -20,11 +20,12 @@ No separate lint/format step is configured (no checkstyle/spotless). Compilation
 
 ## Stack facts
 
-- Spring Boot 3.5.16, Java 21, Maven, packaged under `com.holdly` (e.g. `com.holdly.health`). Follow the `com.holdly.<feature>` package convention.
+- Spring Boot 3.5.16, Java 21, Maven, packaged under `com.holdly`. Follow the `com.holdly.<feature>` package convention.
 - Lombok + MapStruct (1.6.3) with `lombok-mapstruct-binding` are wired via `maven-compiler-plugin` annotationProcessorPaths in `pom.xml`. MapStruct mapper interfaces compile to implementations automatically — do not hand-write them.
-- `spring-boot-starter-data-jpa` is a dependency, but `application.yml` **excludes** `DataSourceAutoConfiguration` and `HibernateJpaAutoConfiguration`. The app runs without a database and has no DB config yet. Re-enable these (and add a datasource) before relying on JPA at runtime.
+- PostgreSQL via standard DataSource auto-configuration: `application.yml` resolves `spring.datasource.*` from `POSTGRES_PORT`/`POSTGRES_DB`/`POSTGRES_USER`/`POSTGRES_PASSWORD` env vars (host-run default `localhost:${POSTGRES_PORT}`; Compose overrides the URL with the `postgres` service name via injected `SPRING_DATASOURCE_URL`). Hibernate runs `ddl-auto: validate` and `open-in-view: false`; no migration tooling — schema changes are manual SQL for now.
+- Health: Spring Boot Actuator only — `GET /actuator/health` (only exposed endpoint), consumed by the Dockerfile `HEALTHCHECK`. No custom health controller; don't add one.
 - springdoc-openapi is present: API docs at `/swagger-ui.html`, spec at `/v3/api-docs`.
-- Endpoints are prefixed `/api` (see `com.holdly.health.HealthController` → `/api/health`). Keep this convention.
+- Endpoints are prefixed `/api`. Keep this convention.
 
 ## Gotchas
 

@@ -18,8 +18,8 @@ Run `docker compose` from the repo root.
 - Data persists in named volumes `holdly_postgres_data` and `holdly_redis_data`.
 - Credentials live only in the root `.env` (copy `.env.example` after cloning; it is gitignored). Compose has no inline fallbacks — without `.env`, `docker compose` fails.
 - Redis requires auth (`--requirepass` from `REDIS_PASSWORD`); Postgres credentials are `POSTGRES_DB`/`POSTGRES_USER`/`POSTGRES_PASSWORD`.
-- The backend container runs as non-root user and health-checks `/api/health`.
-- Compose injects `SPRING_DATASOURCE_*`/`SPRING_DATA_REDIS_*` env vars, but they are inert until the backend re-enables `DataSourceAutoConfiguration` (currently excluded).
+- The backend container runs as non-root user and health-checks `/actuator/health`.
+- Compose injects `SPRING_DATASOURCE_*`/`SPRING_DATA_REDIS_*` env vars; `SPRING_DATASOURCE_URL` overrides the backend's `localhost` JDBC URL inside the Compose network (service name `postgres`). Redis vars are inert (no Redis starter yet).
 
 ## Verify infra connectivity (ping/pong)
 
