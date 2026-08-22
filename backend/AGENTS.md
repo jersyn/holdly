@@ -23,6 +23,7 @@ No separate lint/format step is configured (no checkstyle/spotless). Compilation
 - Spring Boot 3.5.16, Java 21, Maven, packaged under `com.holdly`. Follow the `com.holdly.<feature>` package convention.
 - Lombok + MapStruct (1.6.3) with `lombok-mapstruct-binding` are wired via `maven-compiler-plugin` annotationProcessorPaths in `pom.xml`. MapStruct mapper interfaces compile to implementations automatically — do not hand-write them.
 - PostgreSQL via standard DataSource auto-configuration: `application.yml` resolves `spring.datasource.*` from `POSTGRES_PORT`/`POSTGRES_DB`/`POSTGRES_USER`/`POSTGRES_PASSWORD` env vars (host-run default `localhost:${POSTGRES_PORT}`; Compose overrides the URL with the `postgres` service name via injected `SPRING_DATASOURCE_URL`). Hibernate runs `ddl-auto: validate` and `open-in-view: false`; no migration tooling — schema changes are manual SQL for now.
+- **Local dev `.env` loading**: `dotenv-java` (cdimascio) loads `backend/.env` at startup via `DotenvEnvironmentPostProcessor`. The backend owns its `.env` separately from the root `.env` (used by Docker Compose). Server port is configurable via `SERVER_PORT`.
 - Health: Spring Boot Actuator only — `GET /actuator/health` (only exposed endpoint), consumed by the Dockerfile `HEALTHCHECK`. No custom health controller; don't add one.
 - springdoc-openapi is present: API docs at `/swagger-ui.html`, spec at `/v3/api-docs`.
 - Endpoints are prefixed `/api`. Keep this convention.
@@ -30,4 +31,4 @@ No separate lint/format step is configured (no checkstyle/spotless). Compilation
 ## Gotchas
 
 - `target/` (Maven build output) is **not** in `.gitignore` — don't commit it. Git history currently has `target/` clean; be careful with `git add -A`.
-- `.env*` files are gitignored, but there is no env loading in the app yet (no `.env` support, no config server).
+- `.env*` files are gitignored. Backend uses `dotenv-java` to load `backend/.env` at startup; root `.env` is for Docker Compose only.

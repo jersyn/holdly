@@ -16,7 +16,7 @@ Run `docker compose` from the repo root.
 - `docker compose up -d` — PostgreSQL + Redis only (for local dev; host ports from `POSTGRES_PORT`/`REDIS_PORT` in `.env`).
 - `docker compose --profile full up -d --build` — full stack: adds `backend`, built from the multi-stage `backend/Dockerfile`.
 - Data persists in named volumes `holdly_postgres_data` and `holdly_redis_data`.
-- Credentials live only in the root `.env` (copy `.env.example` after cloning; it is gitignored). Compose has no inline fallbacks — without `.env`, `docker compose` fails.
+- Credentials live only in the root `.env` (copy `.env.example` after cloning; it is gitignored). Compose has no inline fallbacks — without `.env`, `docker compose` fails. The backend also has its own `backend/.env` for local `mvn spring-boot:run` usage.
 - Redis requires auth (`--requirepass` from `REDIS_PASSWORD`); Postgres credentials are `POSTGRES_DB`/`POSTGRES_USER`/`POSTGRES_PASSWORD`.
 - The backend container runs as non-root user and health-checks `/actuator/health`.
 - Compose injects `SPRING_DATASOURCE_*`/`SPRING_DATA_REDIS_*` env vars; `SPRING_DATASOURCE_URL` overrides the backend's `localhost` JDBC URL inside the Compose network (service name `postgres`). Redis vars are inert (no Redis starter yet).
@@ -39,5 +39,5 @@ Run Maven from `backend/` — there is **no Maven wrapper**, use system `mvn`.
 ## Gotchas
 
 - `target/` (Maven output) is **not** gitignored — never `git add -A` from the root; stage files explicitly.
-- `.env*` is gitignored (except `.env.example`), and the app has no env-loading support yet — configuration comes from Compose env vars and `application.yml`.
+- `.env*` is gitignored (except `.env.example`). Root `.env` is for Docker Compose; backend has its own `backend/.env` loaded at startup via `dotenv-java`.
 - Postgres credentials only apply on first volume init (`initdb`). Changing them later requires `docker compose down -v` to recreate the volume.
