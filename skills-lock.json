@@ -6,6 +6,18 @@
       "sourceType": "github",
       "skillPath": "skills/multi-stage-dockerfile/SKILL.md",
       "computedHash": "698bf93a84dae18fd7bd0b1d35c21427307fde78fbdf4624be9726f5f98189ca"
+    },
+    "postgres-patterns": {
+      "source": "affaan-m/ecc",
+      "sourceType": "github",
+      "skillPath": "skills/postgres-patterns/SKILL.md",
+      "computedHash": "5ec6a4f0504f15fe9464ccaed3ab51afcb52345b9456f36b65afc4e5af1fc6aa"
+    },
+    "redis-core": {
+      "source": "redis/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/redis-core/SKILL.md",
+      "computedHash": "623c0cc561a112f28891e3c03f8e88233cca124a006c360ff8d31de08760f5c6"
     }
   }
 }
