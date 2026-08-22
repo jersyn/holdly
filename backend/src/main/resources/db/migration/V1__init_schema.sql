@@ -72,9 +72,9 @@ CREATE TABLE reservation (
     EXCLUDE USING gist (
         place_id WITH =,
         int4range(
-            EXTRACT(HOUR FROM start_time) * 60 + EXTRACT(MINUTE FROM start_time),
+            (EXTRACT(HOUR FROM start_time) * 60 + EXTRACT(MINUTE FROM start_time))::int,
             CASE WHEN end_time = '00:00:00'::time THEN 1440
-                 ELSE EXTRACT(HOUR FROM end_time) * 60 + EXTRACT(MINUTE FROM end_time)
+                 ELSE (EXTRACT(HOUR FROM end_time) * 60 + EXTRACT(MINUTE FROM end_time))::int
             END,
             '[)'
         ) WITH &&
@@ -102,9 +102,9 @@ CREATE TABLE blocked_slot (
     EXCLUDE USING gist (
         place_id WITH =,
         int4range(
-            EXTRACT(HOUR FROM start_time) * 60 + EXTRACT(MINUTE FROM start_time),
+            (EXTRACT(HOUR FROM start_time) * 60 + EXTRACT(MINUTE FROM start_time))::int,
             CASE WHEN end_time = '00:00:00'::time THEN 1440
-                 ELSE EXTRACT(HOUR FROM end_time) * 60 + EXTRACT(MINUTE FROM end_time)
+                 ELSE (EXTRACT(HOUR FROM end_time) * 60 + EXTRACT(MINUTE FROM end_time))::int
             END,
             '[)'
         ) WITH &&
